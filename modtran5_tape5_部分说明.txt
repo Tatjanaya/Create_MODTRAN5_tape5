@@ -1,0 +1,116 @@
+line1：CARD1
+T MODTRAN MODTRAN模式
+M SPEED 中等速度
+F BINARY 所有输出是ASCII
+  LYMOLC 不包括具有模型大气的辅助物种
+7 MODEL 如果用户自带廓线被读取，看CARDs 2C,2C1,2C2,2C2X,2C2Y,2C3
+  T_BEST 使用MODTRAN标准的Voigt单线有限元透射率算法
+2 ITYPE 两个海拔高度之间的垂直或倾斜路径 3 从某一海拔高度到空间的垂直或倾斜路径
+1 IEMSCT 0代表程序只执行光谱透过率 1代表光谱红外模式
+-1 IMULT 是否考虑多角度散射（MS） 考虑，IEMSCT必须是1，2或4才能执行 -1表示MS计算改为引用H2
+0 M1 压强和温度 MODEL等于7时，M1--M6设为0，用户提供剖面数据，TIGR提供了温度，压强，H2O，O3，只有温度，压强和水汽比较重要，所以M1和M2设为0
+0 M2 H20
+3 M3 O3 3代表中纬度冬季，2代表中纬度夏季*
+3 M4 CH4
+3 M5 N2O
+3 M6 CO
+0 MDEF 指定大气模式下其他分子剖面，1代表1976美国，2代表用户输入，有CO2，O2，NO，SO2，NO2，NH3，HNO3
+1 I_RD2C 用户输入数据读取
+0 NOPRNT 正常写tape6和tape7
+0.001 TPTEMP 辐射模式（如果IEMSCT = 1、2或4）在与地球相交或在灰色边界（例如云）处终止的倾斜路径中使用的“图像像素”（即，在H2处）的边界温度[K] ，目标）
+0 SURREF 地表反照率
+  FORMAT
+
+line2 CARD1a
+FFF DIS 如果CARD1的IMULT参数=±1，Isaac的两流算法使用的精度较低，但速度较快
+    DISAZM 仅需要垂直通量
+    DISALB 
+8 NSTR DISORT算法的计算流数，推荐此参数设置为8
+0.0 SFWHM 使用默认TOA太阳数据
+380.000 CO2MX CO2体积混合比（ppmv） 推荐365.000
+  H2OSTR 默认水蒸气柱
+  O3STR 默认臭氧柱
+  C_PROF \\不缩放默认配置文件
+  LSUNFL CARD1A1指定辐照度文件
+F LBMNAM \\ 使用缺省（1cm-1间隔）波段模型数据库
+T LFLTNM \\ 在CARD1A3上读取用户指定仪器滤光片函数文件（flt）文件
+T H2OAER \\ 如果为t，则气溶胶的光学特性会被修改以反映水柱结垢引起的原始相对湿度曲线的变化（请参见本卡片上的H2OSTR）
+  CDTDIR 
+0 SOLCON 不缩放TOA辐射辐照度
+  CDASTM 使用Angstrom定律描述边界层和对流层气溶胶的消光数据
+  ASTMC
+  ASTMX
+  ASTMO
+  AERRH
+0 NSSALB 使用参考气溶胶光谱单散射反照率值
+CARD1a基本是默认选项
+
+line3 OPTIONAL CARDs 1A1, 1A2, 1A3 用于光谱数据和传感器响应函数文件
+flt文件路径
+
+line4 CARD2
+  APLUS 默认blank
+1 IHAZE 乡村气溶胶模式，默认VIS=23km
+  CNOVAM 默认blank，如果是N代表海军海洋垂直气溶胶模式输出 
+0 ISEASN 针对对流层和平流层来选择季节适当的气溶胶剖面，仅在2到10km剖面内的对流层气溶胶消光系数使用，0代表季节由MODEL决定
+  ARUSS 默认blank，如果是USS代表用户提供气溶胶光学特性 
+0 IVULCN 控制气溶胶剖面的选择也可以确定平流层气溶胶消光类型，0代表背景平流层气溶胶剖面和消光系数
+  ICSTL 描述气团性质（1--10），在海军海洋型（IHAZE=3）时使用，默认3 
+0 ICLD 指定云雨模式，无云，无降雨
+0 IVSA 地面边界层气溶胶的陆军垂直结构算法，不使用
+23.000 VIS >0，用户指定地表气象距离，如果=0，由IHAZE来设置气象距离缺省值
+0 WSS 指定现场的风速（海军海洋型和沙漠型气溶胶模式下）
+0 WHH 海军海洋型气溶胶模式下24小时平均风速
+0 RAINRT 指定降雨强度，默认0 
+0.500 GNDALT 地面海拔高度（km），可以是负值
+
+由于APLUS设置默认值，无CARD 2A+，如果APLUS='A+'，那么应该有CARD 2A+
+由于ICLD=0，指定无云雨模式，没有CARD 2A
+由于IVSA=0，≠1，所以没有CARD 2B，该项是用来计算the Army VSA(Vertical Structure Algorithm) subroutine
+CARD 2D, 2D1, 2D2需要用户自行输入气溶胶和云参数，需要IHAZE=7或者ICLD=11，不需要
+CARD 2E1, 2E2 允许用户控制非卷云的云参数，在ICLD=18和19卷云模型时不能使用。需要CARD 2A中NCRALT≥3使用CARD 2E1，NCRSPC≥2使用CARD 2E2。选择了无云雨，不需要
+
+line5 OPTIONAL CARD 2C
+用户输入廓线数据，MODEL=7且I_RD2C=1
+43 ML 大气层数
+0 IRD1 控制读取CARD2C2内WMOL，0代表不读取
+0 IRD2 控制读取AHAZE,EQLWCZ(CARD 2C3)，0代表不读取
+ HMODEL \\ Identification of new model atmosphere
+0 REE 
+0 NMOLYC 具有指定名称，浓度和分子量的用户定义种类的数量
+1 E_MASS 地球质量中的行星质量，MODEL=8时静水力方程
+28.964 AIRMWT 表面空气的分子量，g/mol，如果设0，代表AIR_MW=28.964 g/mol
+
+大气廓线
+
+line6 CARD 3 用于给定几何路径
+ H1 初始海拔高度（km）
+ H2 最终海拔高度（km） ITYPE=2， 正切高度（km） ITYPE=3
+ ANGLE 从H1测量的天顶角
+ RANGE 路径长度（km）
+ BETA 针对H1和H2的地球中心张角（度）
+ RO 地球半径（km）
+ LENN 由以下所描述的2a和2c条件下来确定短路径和长路径 0代表缺省，路径是短
+ PHI 相对于H1（传感器或初始海拔）的H2（目标或最终海拔）上天顶角
+
+CARDs 3A1, 3A2控制太阳/月亮散射几何，需要CARD 1中IEMSCT=2或4，不需要
+CARD 3B1, 3B2, 3C1-3C6，用户定义散射相函数，当CARD 3A1中PHI=1，这些CARDs用于用户定义散射相函数，不需要
+
+line7 CARD 4 光谱范围和分辨率
+ V1 初始频率（cm-1），或波长
+ V2 最终频率或波长
+ DV 用于光谱输出的频率增量
+ FWHM 半值波宽
+ YFLAG T 透射率输出在pltout和pltout.scn文件 R 辐亮度替换透射率输出在pltout和pltout.scn
+ XFLAG 控制pltout和pltout.scn输出文件的单位 W，频率为波数，辐亮度W/sr/cm2/cm M,波长为微米，辐亮度W/sr/cm2/μm N，波长为纳米，辐亮度W/sr/cm2/nm
+ DLIMIT 最多8个字节长，从连续的MODTRAN运行过程中来区分pltout和pltout.scn文件
+ FLAGS 设置V1 V2 DV pltout.scn 和 tape7.scn 光谱单位
+ MLFLX 
+ VRFRAC 
+
+CARDs 4A, 4B1, 4B2, 4B3, 4L1, 4L2 地面特征，如地面反射率和发射率规格，当CARD 1中SURREF='B'或'L'，不需要
+
+line8 CARD 5
+0 IRPT 非0会继续运行，0代表停止程序
+
+需要调整的是CARD 1中M1--M6，CARD 3中H1 H2 ANGLE， CARD 4中V1 V2 YFLAG XFLAG
