@@ -15,4 +15,4 @@ TIGR中臭氧混合比是（g/g），tape5中是（g/kg），需要乘1000
 
 总透过率会积分在tape6文件中而不是plt文件中，可以用正则表达式提取 AVERAGE TRANSMITTANCE那行中的总透过率
 
-![image](https://github.com/Tatjanaya/Create_MODTRAN5_tape5.git/TIGR.png)
+![image](https://github.com/Tatjanaya/Create_MODTRAN5_tape5/blob/master/TIGR.png)
